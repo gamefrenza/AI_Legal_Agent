@@ -907,5 +907,458 @@ The implementation includes proper error handling, logging, and configuration ma
 5. Added logging for better debugging and monitoring
 
 The system provides immediate feedback to users about compliance issues while maintaining reliability and security.
+------------------------------------------------
+
+Based on the codebase search, I can explain how the system implements AI-driven template generation. Let me break down the key components and their functionality:
+
+1. **Document Generation Pipeline**:
+The system uses a sophisticated multi-layer approach:
+
+```python
+class DocumentGenerator:
+    def __init__(self):
+        self.env = Environment(loader=BaseLoader())
+        self.nlp = NLPProcessor()
+    
+    async def generate_document(
+        self,
+        template_id: str,
+        variables: Dict,
+        format: str = "docx",
+        context: Optional[Dict] = None
+    ) -> bytes:
+```
+
+2. **AI-Enhanced Template Processing**:
+- **NLP Processor** (`backend/document-service/nlp_processor.py`):
+  ```python
+  class NLPProcessor:
+      def __init__(self):
+          self.nlp = spacy.load("en_core_web_lg")
+          self.summarizer = pipeline("summarization")
+          self.generator = pipeline("text-generation")
+  ```
+  - Enhances content using advanced NLP
+  - Performs named entity recognition
+  - Improves text clarity and structure
+  - Provides context-aware enhancements
+
+3. **Template Management and Validation**:
+- **Template Processor** (`backend/document-service/template_processor.py`):
+  ```python
+  class TemplateProcessor:
+      async def process_template(
+          self,
+          template: str,
+          variables: Dict,
+          sections: Optional[List[str]] = None
+      )
+  ```
+  - Validates template syntax
+  - Processes conditional sections
+  - Handles variable substitution
+  - Manages template inheritance
+
+4. **AI Orchestration for Document Generation**:
+- **AI Orchestrator** (`backend/ai-orchestrator/orchestrator.py`):
+  ```python
+  class AIOrchestrator:
+      def __init__(self):
+          self.agents = {
+              'document_generation': DocumentGenerationAgent(),
+              'contract_review': ContractReviewAgent(),
+              'compliance': ComplianceAgent()
+          }
+  ```
+  - Coordinates multiple AI agents
+  - Handles task queuing and execution
+  - Aggregates results from different agents
+
+5. **Key Features of AI-Driven Template Generation**:
+
+a) **Intelligent Variable Processing**:
+- Context-aware variable substitution
+- NLP enhancement of content
+- Entity recognition and definition
+- Automatic formatting and structure improvement
+
+b) **Template Inheritance and Customization**:
+- Support for template inheritance chains
+- Jurisdiction-specific template variations
+- Dynamic section inclusion/exclusion
+- Conditional content based on context
+
+c) **Content Enhancement**:
+```python
+async def enhance_content(self, text: str, context: Optional[Dict] = None):
+    # Process text with spaCy
+    doc = self.nlp(text)
+    
+    # Perform named entity recognition
+    entities = self._extract_entities(doc)
+    
+    # Enhance content based on context
+    if context:
+        text = await self._context_aware_enhancement(text, context, entities)
+```
+
+d) **Quality Assurance**:
+- Template syntax validation
+- Variable reference checking
+- Content structure verification
+- Compliance checking
+
+6. **Integration with Other Components**:
+
+a) **Document Workflow**:
+```python
+class DocumentProcessor:
+    async def process_document(
+        self,
+        document_id: str,
+        template_id: Optional[str] = None,
+        variables: Optional[Dict] = None,
+        format: str = "docx",
+        user_id: str = None,
+        context: Optional[Dict] = None
+    )
+```
+
+b) **Compliance Integration**:
+- Automatic compliance checking during generation
+- Jurisdiction-specific rule validation
+- Real-time compliance notifications
+
+The system provides a comprehensive solution for AI-driven template generation by:
+1. Using advanced NLP models for content enhancement
+2. Implementing intelligent template processing
+3. Providing context-aware variable substitution
+4. Ensuring compliance with legal requirements
+5. Supporting multiple output formats
+6. Maintaining document versioning and audit trails
+------------------------------------------------
+Based on the codebase analysis, the system has robust capabilities for customizing documents to fit specific client needs and legal requirements. Here's a detailed breakdown:
+
+1. **Template Customization System**:
+```python
+class Template(Base):
+    __tablename__ = "templates"
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
+    content = Column(String, nullable=False)
+    jurisdiction = Column(String(100), nullable=False)
+    version = Column(Integer, nullable=False, default=1)
+    
+    # Template inheritance
+    parent_templates = relationship(...)
+    variables = Column(JSONB, nullable=False, default=[])
+    metadata = Column(JSONB, nullable=False, default={})
+```
+
+2. **Dynamic Content Generation**:
+The `DocumentGenerator` class provides sophisticated customization:
+```python
+async def generate_document(
+    self,
+    template_id: str,
+    variables: Dict,
+    format: str = "docx",
+    context: Optional[Dict] = None
+):
+    # Get template and inheritance chain
+    template = await self._get_template_chain(template_id)
+    
+    # Process variables and enhance content
+    processed_vars = await self._process_variables(variables, context)
+    
+    # Generate content with customizations
+    content = await self._render_template(template, processed_vars)
+```
+
+3. **Client-Specific Customization Features**:
+
+a) **Template Inheritance**:
+- Supports base templates with customizable sections
+- Allows jurisdiction-specific variations
+- Enables industry-specific modifications
+- Maintains version control for updates
+
+b) **Variable Processing**:
+```python
+async def _process_variables(self, variables: Dict, context: Optional[Dict]) -> Dict:
+    processed = variables.copy()
+    
+    # Enhance content with NLP where appropriate
+    for key, value in processed.items():
+        if isinstance(value, str) and len(value) > 50:
+            processed[key] = await self.nlp.enhance_content(value, context)
+```
+
+c) **Conditional Sections**:
+```python
+def _process_sections(self, template: str, sections: List[str]) -> str:
+    """Process template sections based on inclusion list"""
+    lines = template.split('\n')
+    result = []
+    current_section = None
+    include_line = True
+```
+
+4. **Legal Requirement Integration**:
+
+a) **Compliance Checking**:
+```python
+async def check_compliance(
+    self,
+    document: Document,
+    context: Dict[str, Any]
+) -> ComplianceReport:
+    # Determine applicable regulations
+    regulations = await self._get_applicable_regulations(
+        document.jurisdiction,
+        document.type
+    )
+```
+
+b) **Multi-Jurisdiction Support**:
+- Handles different jurisdictional requirements
+- Validates against jurisdiction-specific rules
+- Supports cross-border document requirements
+- Implements jurisdiction-specific validation
+
+5. **Context-Aware Customization**:
+
+a) **Document Context**:
+```python
+new_doc = Document(
+    content=content,
+    version=version,
+    parent_version_id=parent_doc.id if parent_doc else None,
+    created_by=user_id,
+    jurisdiction=context.get('jurisdiction'),
+    metadata={
+        'context': context,
+        'timestamp': datetime.utcnow().isoformat()
+    }
+)
+```
+
+b) **NLP Enhancement**:
+- Enhances content based on context
+- Performs named entity recognition
+- Improves text clarity and structure
+- Adds relevant contextual information
+
+6. **Quality Assurance**:
+
+a) **Template Validation**:
+```python
+class TemplateValidator(BaseModel):
+    content: str
+    variables: List[str]
+    conditions: List[str]
+    sections: List[str]
+    
+    @validator('content')
+    def validate_template_syntax(cls, v):
+        """Validate Jinja2 template syntax"""
+```
+
+b) **Compliance Verification**:
+- Real-time compliance checking
+- Automatic validation against rules
+- Error detection and reporting
+- Audit trail maintenance
+
+The system provides a comprehensive solution for document customization by:
+1. Supporting flexible template inheritance
+2. Enabling dynamic content generation
+3. Ensuring compliance with legal requirements
+4. Providing context-aware customization
+5. Maintaining quality through validation
+6. Supporting multiple output formats
+7. Tracking changes and versions
+
+------------------------------------------------
+Based on the codebase analysis, I can explain how the system implements comprehensive logging mechanisms to track AI actions. Here's a detailed breakdown:
+
+1. **Core Logging Infrastructure**
+
+The system uses a multi-layered logging approach through the `ActivityMonitor` class:
+
+```python
+class ActivityMonitor:
+    def __init__(self):
+        self.activity_store = ActivityStore()
+        self.anomaly_detector = AnomalyDetector()
+        self.alert_manager = AlertManager()
+    
+    async def log_activity(
+        self,
+        user_id: str,
+        action: str,
+        resource_id: str,
+        metadata: Dict[str, Any]
+    ) -> None:
+        activity = ActivityLog(
+            user_id=user_id,
+            action=action,
+            resource_id=resource_id,
+            timestamp=datetime.utcnow(),
+            metadata=metadata
+        )
+        await self.activity_store.store_activity(activity)
+```
+
+2. **AI-Specific Logging**
+
+The system tracks AI operations through dedicated models:
+
+```python
+class AITask(Base):
+    __tablename__ = "ai_tasks"
+    
+    # Task details
+    status = Column(String(50), nullable=False)
+    input_data = Column(JSONB, nullable=False)
+    output_data = Column(JSONB, nullable=True)
+    
+    # Execution tracking
+    started_at = Column(DateTime, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
+    error_log = Column(JSONB, nullable=True)
+```
+
+3. **Performance Monitoring**
+
+The `PerformanceMonitor` class tracks AI agent performance:
+
+```python
+class PerformanceMonitor:
+    def __init__(self):
+        self.metrics = {}
+        self.current_tasks = {}
+    
+    @contextmanager
+    def track(self, agent_name: str):
+        start_time = time.time()
+        start_memory = self._get_memory_usage()
+        
+        try:
+            yield
+        finally:
+            end_time = time.time()
+            end_memory = self._get_memory_usage()
+            
+            self._record_metrics(
+                agent_name,
+                execution_time=end_time - start_time,
+                memory_usage=end_memory - start_memory
+            )
+```
+
+4. **Compliance Audit Trail**
+
+The `ComplianceAuditManager` ensures compliance-related actions are tracked:
+
+```python
+class ComplianceAuditManager:
+    async def log_compliance_event(
+        self,
+        event_type: str,
+        document_id: str,
+        details: Dict[str, Any],
+        user_id: Optional[str] = None
+    ) -> AuditEvent:
+        event = AuditEvent(
+            event_type=event_type,
+            document_id=document_id,
+            user_id=user_id,
+            timestamp=datetime.utcnow(),
+            details=details,
+            event_hash=await self._generate_event_hash(details)
+        )
+        await self.audit_store.store_event(event)
+```
+
+5. **Audit Records**
+
+The system maintains detailed audit records:
+
+```python
+class AuditRecord(Base):
+    __tablename__ = "audit_records"
+    
+    id = Column(Integer, primary_key=True)
+    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+    action = Column(String(100), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    resource_type = Column(String(50), nullable=False)
+    resource_id = Column(Integer, nullable=False)
+    changes = Column(JSONB, nullable=False)
+    ip_address = Column(String(45), nullable=True)
+    user_agent = Column(String(255), nullable=True)
+    metadata = Column(JSONB, nullable=False, default={})
+```
+
+6. **AI Orchestration Logging**
+
+The `AIOrchestrator` tracks the execution of AI tasks:
+
+```python
+class AIOrchestrator:
+    async def process_task(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
+        # Create task
+        task = await self._create_task(task_data)
+        
+        # Execute subtasks
+        results = await self._execute_subtasks(subtasks)
+        
+        # Update task status
+        await self._update_task_status(task, final_result)
+```
+
+Key Features of the Logging System:
+
+1. **Comprehensive Coverage**:
+- Tracks all AI actions and decisions
+- Records input and output data
+- Monitors performance metrics
+- Logs compliance-related events
+
+2. **Security Features**:
+- Immutable audit trails
+- Hash chain validation
+- Secure storage of sensitive data
+- Access control logging
+
+3. **Performance Tracking**:
+- Execution time monitoring
+- Memory usage tracking
+- Success/error rate calculation
+- Resource utilization metrics
+
+4. **Compliance Support**:
+- Detailed event logging
+- Audit trail generation
+- Compliance event validation
+- Report generation capabilities
+
+5. **Anomaly Detection**:
+- Monitors for unusual patterns
+- Triggers alerts for suspicious activity
+- Tracks system health metrics
+- Enables proactive issue resolution
+
+This comprehensive logging system ensures:
+1. Complete transparency of AI operations
+2. Accountability for all actions
+3. Performance optimization capabilities
+4. Compliance with regulatory requirements
+5. Security incident investigation support
+6. System health monitoring
+7. Audit trail maintenance
+----------------------------
 
 
