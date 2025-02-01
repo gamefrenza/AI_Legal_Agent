@@ -1,7 +1,3 @@
-# AI_Legal_Agent
-AI Legal Automation Platform
-I'll create a comprehensive README.md file that explains the project structure, setup, and development guidelines.
-
 ```markdown:README.md
 # Legal Automation System
 
@@ -207,5 +203,3 @@ MIT License - see LICENSE file for details
 
 For support, please open an issue in the GitHub repository or contact the development team.
 ```
-
-This README provides a comprehensive guide for developers to understand the project structure, set it up locally, and contribute to its development. Would you like me to expand on any particular section or add more specific technical details?
