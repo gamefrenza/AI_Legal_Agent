@@ -1,205 +1,226 @@
-```markdown:README.md
 # Legal Automation System
 
-A secure, microservices-based legal document automation system with AI capabilities, document version control, and multi-jurisdiction support.
+A comprehensive legal automation platform with advanced security, compliance, and document management capabilities.
 
-## System Architecture
+## System Overview
 
-The system is built using a microservices architecture with the following components:
+### Core Features
+- Document automation and management
+- AI-powered legal analysis
+- Multi-jurisdiction compliance checking
+- Advanced security controls
+- Comprehensive audit logging
 
-### Backend Services
+### Key Components
+1. **Document Management**
+   - Secure document storage
+   - Version control
+   - Access controls
+   - Document encryption
 
-1. **Document Service** (`/backend/document-service`)
-   - Handles document creation, updates, and version control
-   - Supports document metadata and jurisdiction-specific content
-   - Implements secure document storage and retrieval
+2. **Security System**
+   - Authentication & Authorization
+   - Role-based access control
+   - Session management
+   - Activity monitoring
 
-2. **Template Service** (`/backend/template-service`)
-   - Manages legal document templates
-   - Supports template versioning and jurisdictional variants
-   - Handles template variables and placeholders
+3. **Compliance Engine**
+   - Regulatory compliance checking
+   - Privacy controls
+   - Data protection
+   - Audit trails
 
-3. **AI Orchestrator** (`/backend/ai-orchestrator`)
-   - Coordinates AI-powered document analysis
-   - Manages document review and compliance checking
-   - Provides template suggestions and risk assessment
+4. **AI Integration**
+   - Contract analysis
+   - Legal research
+   - Risk assessment
+   - Compliance validation
 
-4. **Audit Service** (`/backend/audit-service`)
-   - Logs all system actions for compliance and tracking
-   - Provides detailed audit trails
-   - Stores logs in MongoDB for efficient querying
+## Setup Instructions
 
-### Frontend Application
-
-Built with React and TypeScript, providing:
-- Real-time document editing
-- Template management interface
-- Collaboration features
-- Audit log viewing
-
-## Prerequisites
-
+### Prerequisites
+```bash
+# Required software
 - Python 3.8+
 - Node.js 16+
 - MongoDB 4.4+
-- Docker and Docker Compose
+- Redis 6+
+```
 
-## Setup and Installation
+### Installation
 
-1. **Clone the repository**
+1. **Clone Repository**
 ```bash
 git clone https://github.com/your-org/legal-automation-system.git
 cd legal-automation-system
 ```
 
 2. **Backend Setup**
-
-Install Python dependencies for each service:
 ```bash
-cd backend
+# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your configurations
 ```
 
-Required Python packages:
-- fastapi
-- uvicorn
-- pydantic
-- motor
-- python-jose[cryptography]
-- passlib[bcrypt]
-
 3. **Frontend Setup**
-
 ```bash
 cd frontend
 npm install
+cp .env.example .env.local
+# Edit .env.local with your configurations
 ```
 
-Required npm packages:
-- react
-- @monaco-editor/react
-- antd
-- axios
-- @types/react
-- typescript
+4. **Database Setup**
+```bash
+# Start MongoDB
+sudo systemctl start mongodb
 
-4. **Environment Configuration**
+# Initialize database
+python scripts/init_db.py
+```
 
-Create `.env` files for each service:
+### Security Configuration
 
-```env
-# Backend services .env
-MONGODB_URI=mongodb://localhost:27017
-JWT_SECRET=your-secret-key
-CORS_ORIGINS=http://localhost:3000
+1. **Authentication Setup**
+```bash
+# Generate secret keys
+python scripts/generate_keys.py
 
-# Frontend .env
-REACT_APP_API_URL=http://localhost:8000
+# Configure JWT
+export JWT_SECRET_KEY="your-secret-key"
+export JWT_ALGORITHM="HS256"
+```
+
+2. **Encryption Setup**
+```bash
+# Generate encryption keys
+python scripts/generate_encryption_keys.py
+
+# Configure encryption
+export ENCRYPTION_MASTER_KEY="your-master-key"
 ```
 
 ## Development
 
-1. **Running Backend Services**
-
-Start each service individually:
+### Running Tests
 ```bash
-cd backend/document-service
-uvicorn app:app --reload --port 8001
+# Run all tests
+pytest
 
-cd backend/template-service
-uvicorn app:app --reload --port 8002
-
-cd backend/ai-orchestrator
-uvicorn app:app --reload --port 8003
-
-cd backend/audit-service
-uvicorn app:app --reload --port 8004
+# Run specific test categories
+pytest backend/tests/unit/
+pytest backend/tests/integration/
+pytest backend/tests/security/
+pytest backend/tests/compliance/
 ```
 
-2. **Running Frontend**
-
+### Code Quality
 ```bash
-cd frontend
-npm start
+# Run linters
+flake8 backend/
+mypy backend/
+
+# Run security checks
+bandit -r backend/
 ```
-
-## API Documentation
-
-Each service provides Swagger documentation at `/docs` endpoint when running:
-- Document Service: http://localhost:8001/docs
-- Template Service: http://localhost:8002/docs
-- AI Orchestrator: http://localhost:8003/docs
-- Audit Service: http://localhost:8004/docs
 
 ## Security Features
 
-- OAuth2 authentication for all services
+### Document Security
+- Encryption at rest
+- Encryption in transit
+- Access controls
+- Version control
+- Audit logging
+
+### User Security
+- Multi-factor authentication
 - Role-based access control
-- Audit logging for all actions
-- Secure document storage
-- Input validation and sanitization
+- Session management
+- Activity monitoring
+- Anomaly detection
 
-## Contributing
+### Compliance Security
+- Data protection
+- Privacy controls
+- Regulatory compliance
+- Audit trails
+- Report generation
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+## API Documentation
 
-## Testing
-
-Run backend tests:
+### Authentication
 ```bash
-pytest backend/*/tests
+POST /api/auth/login
+POST /api/auth/refresh
+POST /api/auth/logout
 ```
 
-Run frontend tests:
+### Documents
 ```bash
-cd frontend
-npm test
+POST /api/documents
+GET /api/documents/{id}
+PUT /api/documents/{id}
+DELETE /api/documents/{id}
 ```
 
-## Docker Deployment
-
-Build and run services using Docker Compose:
+### Compliance
 ```bash
-docker-compose up --build
+POST /api/compliance/check
+GET /api/compliance/report
+GET /api/compliance/audit-trail
 ```
 
-## Project Structure
+## Deployment
 
-```
-legal-automation-system/
-├── backend/
-│   ├── document-service/
-│   ├── template-service/
-│   ├── compliance-service/
-│   ├── audit-service/
-│   ├── integration-service/
-│   ├── ai-orchestrator/
-│   └── api-gateway/
-├── frontend/
-│   ├── src/
-│   └── public/
-└── docker/
-```
+### Production Setup
+1. Configure production environment
+2. Set up SSL/TLS certificates
+3. Configure backup systems
+4. Set up monitoring
 
-## Future Enhancements
+### Security Checklist
+- [ ] Configure firewalls
+- [ ] Set up intrusion detection
+- [ ] Enable audit logging
+- [ ] Configure backup encryption
+- [ ] Set up monitoring alerts
 
-- Implement real-time collaboration using WebSocket
-- Add support for digital signatures
-- Enhance AI capabilities for document analysis
-- Add document comparison features
-- Implement workflow automation
+## Maintenance
 
-## License
+### Regular Tasks
+- Security updates
+- Dependency updates
+- Database backups
+- Log rotation
+- Performance monitoring
 
-MIT License - see LICENSE file for details
+### Monitoring
+- System health
+- Security events
+- User activity
+- Performance metrics
+- Compliance status
 
 ## Support
 
-For support, please open an issue in the GitHub repository or contact the development team.
-```
+### Contact
+- Technical Support: support@example.com
+- Security Issues: security@example.com
+- Compliance Questions: compliance@example.com
+
+### Documentation
+- [User Guide](docs/user-guide.md)
+- [API Documentation](docs/api.md)
+- [Security Guide](docs/security.md)
+- [Compliance Guide](docs/compliance.md)
+
+## License
+[Your License Type] - See LICENSE file for details
