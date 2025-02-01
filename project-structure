@@ -1,0 +1,13 @@
+legal-automation-system/
+├── backend/
+│   ├── document-service/
+│   ├── template-service/
+│   ├── compliance-service/
+│   ├── audit-service/
+│   ├── integration-service/
+│   ├── ai-orchestrator/
+│   └── api-gateway/
+├── frontend/
+│   ├── src/
+│   └── public/
+└── docker/ 
