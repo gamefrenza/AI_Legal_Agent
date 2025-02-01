@@ -2100,5 +2100,320 @@ This architecture allows for:
 7. Practice-specific features
 8. Jurisdiction-specific adaptations
 
-Would you like me to explain any specific aspect of the customization capabilities in more detail?
+-------------------------------------
+# Performance Monitoring and Reporting
+
+Based on the codebase analysis, the system implements comprehensive monitoring through dashboards and metrics tracking. Here's a detailed breakdown:
+
+1. **Performance Monitoring**
+
+The `PerformanceMonitor` class tracks system performance metrics:
+
+```python
+class PerformanceMonitor:
+    def __init__(self):
+        self.metrics = {}
+        self.current_tasks = {}
+    
+    @contextmanager
+    def track(self, agent_name: str):
+        start_time = time.time()
+        start_memory = self._get_memory_usage()
+        
+        try:
+            yield
+        finally:
+            end_time = time.time()
+            end_memory = self._get_memory_usage()
+            
+            self._record_metrics(
+                agent_name,
+                execution_time=end_time - start_time,
+                memory_usage=end_memory - start_memory
+            )
+```
+
+2. **Activity Monitoring**
+
+The `ActivityMonitor` tracks user and system activities:
+
+```python
+class ActivityMonitor:
+    def __init__(self):
+        self.activity_store = ActivityStore()
+        self.anomaly_detector = AnomalyDetector()
+        self.alert_manager = AlertManager()
+    
+    async def log_activity(
+        self,
+        user_id: str,
+        action: str,
+        resource_id: str,
+        metadata: Dict[str, Any]
+    ) -> None:
+        activity = ActivityLog(
+            user_id=user_id,
+            action=action,
+            resource_id=resource_id,
+            timestamp=datetime.utcnow(),
+            metadata=metadata
+        )
+```
+
+3. **Compliance Monitoring**
+
+The system generates detailed compliance reports:
+
+```python
+async def generate_compliance_report(
+    self,
+    compliance_status: ComplianceStatus
+) -> Dict[str, Any]:
+    report = {
+        'document_id': compliance_status.document_id,
+        'timestamp': datetime.utcnow(),
+        'overall_status': all(r['compliant'] for r in compliance_status.results.values()),
+        'regulations': {}
+    }
+```
+
+4. **Monitoring Setup**
+
+The system uses industry-standard monitoring tools:
+
+```bash
+# Install monitoring packages
+pip install prometheus_client grafana-api
+
+# Start Prometheus
+docker run -d \
+    -p 9090:9090 \
+    -v ./prometheus.yml:/etc/prometheus/prometheus.yml \
+    prom/prometheus
+
+# Start Grafana
+docker run -d \
+    -p 3000:3000 \
+    grafana/grafana
+```
+
+5. **Key Metrics Tracked**
+
+a) **System Performance**:
+- Execution times
+- Memory usage
+- Success rates
+- Error rates
+- Resource utilization
+
+b) **Document Processing**:
+- Processing times
+- Success/failure rates
+- Queue lengths
+- Document volumes
+- Error rates
+
+c) **Compliance Status**:
+- Compliance rates
+- Violation counts
+- Resolution times
+- Risk levels
+- Audit status
+
+6. **Dashboard Features**
+
+The system provides dashboards for:
+
+a) **System Health**:
+- Service status
+- Resource usage
+- Error rates
+- Response times
+- Queue status
+
+b) **Document Management**:
+- Document processing rates
+- Template usage
+- Version control status
+- Storage utilization
+- Access patterns
+
+c) **Compliance Overview**:
+- Compliance status
+- Violation trends
+- Risk assessments
+- Audit trails
+- Regulatory updates
+
+7. **Monitoring Integration**
+
+The system integrates monitoring with:
+- Prometheus for metrics collection
+- Grafana for visualization
+- Alert systems for notifications
+- Logging systems for audit trails
+- Analytics for reporting
+
+8. **Best Practices Implementation**
+
+The system follows monitoring best practices:
+- Comprehensive error handling
+- Performance optimization
+- Caching strategies
+- Database query optimization
+- Regular testing
+- Automated alerts
+
+This monitoring system ensures:
+1. Real-time visibility into system performance
+2. Early detection of issues
+3. Compliance status tracking
+4. Document processing metrics
+5. User activity monitoring
+6. Security event tracking
+7. Resource utilization monitoring
+8. Performance optimization insights
+
+------------------------  
+The system implements a comprehensive reporting framework through several key components:
+
+1. **Performance Monitoring and Metrics**
+
+The `PerformanceMonitor` class tracks detailed system metrics:
+
+```python
+class PerformanceMonitor:
+    def __init__(self):
+        self.metrics = {}
+        self.current_tasks = {}
+    
+    def get_agent_metrics(self, agent_name: str) -> Dict[str, Any]:
+        metrics = self.metrics.get(agent_name, {})
+        return {
+            'avg_execution_time': statistics.mean(metrics['execution_times']),
+            'avg_memory_usage': statistics.mean(metrics['memory_usage']),
+            'success_rate': metrics['success_rate'],
+            'error_rate': metrics['error_rate']
+        }
+```
+
+2. **Compliance Reporting**
+
+The `RegulatoryComplianceManager` generates detailed compliance reports:
+
+```python
+async def generate_compliance_report(
+    self,
+    compliance_status: ComplianceStatus
+) -> Dict[str, Any]:
+    report = {
+        'document_id': compliance_status.document_id,
+        'timestamp': datetime.utcnow(),
+        'overall_status': all(r['compliant'] for r in compliance_status.results.values()),
+        'regulations': {}
+    }
+```
+
+3. **Key Report Types**
+
+The system generates several types of reports:
+
+a) **System Performance Reports**:
+- Execution times and latency
+- Memory usage patterns
+- Success/error rates
+- Resource utilization
+- System bottlenecks
+
+b) **Usage Analytics**:
+- Document processing volumes
+- Template usage statistics
+- User activity patterns
+- Feature utilization
+- Peak usage times
+
+c) **Efficiency Metrics**:
+- Processing time improvements
+- Resource optimization
+- Error rate reduction
+- Automation savings
+- Performance trends
+
+d) **Improvement Areas**:
+- Performance bottlenecks
+- Error patterns
+- Resource constraints
+- User pain points
+- Feature gaps
+
+4. **Report Generation Features**
+
+The system includes:
+
+a) **Automated Collection**:
+- Real-time metric gathering
+- Performance monitoring
+- Usage tracking
+- Error logging
+- Resource monitoring
+
+b) **Analysis Capabilities**:
+- Trend analysis
+- Pattern detection
+- Anomaly identification
+- Performance correlation
+- Usage insights
+
+c) **Visualization Options**:
+- Performance dashboards
+- Usage graphs
+- Trend charts
+- Compliance status
+- Resource utilization
+
+5. **Actionable Insights**
+
+The reports provide insights for:
+
+a) **System Optimization**:
+- Resource allocation
+- Performance tuning
+- Cache optimization
+- Query optimization
+- Load balancing
+
+b) **User Experience**:
+- Feature usage patterns
+- User pain points
+- Interface improvements
+- Workflow optimization
+- Training needs
+
+c) **Compliance Improvements**:
+- Regulatory adherence
+- Security enhancements
+- Privacy controls
+- Audit readiness
+- Risk mitigation
+
+6. **Report Distribution**
+
+Reports can be:
+- Scheduled automatically
+- Generated on-demand
+- Customized by role
+- Exported in multiple formats
+- Shared securely
+
+This comprehensive reporting system ensures:
+1. Data-driven decision making
+2. Continuous system improvement
+3. Efficient resource allocation
+4. Enhanced user experience
+5. Regulatory compliance
+6. Performance optimization
+7. Proactive issue resolution
+
+
+
 
