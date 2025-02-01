@@ -209,13 +209,6 @@ GET /api/compliance/audit-trail
 - Performance metrics
 - Compliance status
 
-## Support
-
-### Contact
-- Technical Support: support@example.com
-- Security Issues: security@example.com
-- Compliance Questions: compliance@example.com
-
 ### Documentation
 - [User Guide](docs/user-guide.md)
 - [API Documentation](docs/api.md)
